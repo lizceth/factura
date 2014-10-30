@@ -1,0 +1,4 @@
+
+-r test.txt
+sphinx==1.2.2
+-e git+https://github.com/django-debug-toolbar/django-debug-toolbar.git#egg=django-debug-toolbar

@@ -1,0 +1,8 @@
+django==1.7
+bpython==0.13
+logutils==0.3.3
+django_model_utils==2.0.3
+django-braces==1.4.0     
+-e
+git+https://github.com/sehmaschine/django-grappelli.git@dev/2.6.x#egg=django-grappelli
+django-compressor
