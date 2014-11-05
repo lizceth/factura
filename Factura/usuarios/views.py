@@ -1,28 +1,45 @@
-from django.shortcuts import render, HttpResponseRedirect, render_to_response
+from django.shortcuts import render
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib.auth import login, authenticate, logout
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
+from django.http import HttpResponse, HttpResponseRedirect, HttpResponse
+from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
-from django.contrib.auth import logout, authenticate, login
-#decorador de vigilancia de login
 
-@watch_login
-def login_view(request):
-    #funcion que permite uniciar sesion en el proyecto django
-    #para salir
+
+
+def ingresar(request):
+    if not request.user.is_anonymous():
+        return HttpResponseRedirect('/privado')
+    if request.method == 'POST':
+        formulario = AuthenticationForm(request.POST)
+        if formulario.is_valid:
+            usuario = request.POST['username']
+            clave = request.POST['password']
+            acceso = authenticate(username=usuario, password=clave)
+            if acceso is not None:
+                if acceso.is_active:
+                    login(request, acceso)
+                    return HttpResponseRedirect('/privado')
+                else:
+                    return render_to_response('usuarios/noactivo.html',
+                                              context_instance=RequestContext(request))
+            else:
+                return render_to_response('usuarios/nousuario.html',
+                                          context_instance=RequestContext(request))
+    else:
+        formulario = AuthenticationForm()
+    return render_to_response('usuarios/ingresar.html',{'formulario':formulario}, context_instance=RequestContext(request))
+
+
+@login_required(login_url='/ingresar')
+def privado(request):
+    usuario = request.user
+    return render_to_response('usuarios/privado.html',
+                              {'usuario':usuario}, context_instance=RequestContext(request))
+
+@login_required(login_url='/ingresar')
+def cerrar(request):
     logout(request)
-    username=password=''
-    login_failed=False
-
-    if request.POST:
-        username=request.POST['username'].replace('  ','').lower()
-        password=request.POST['password']
-        user=authenticate(username=my_username, password=my_password)
-
-        if user is not None:
-            if user.is_active:
-                login(request, user)
-                return HttpResponseRedirect('/admin/')
-        else:
-            login_failed=True
-
-    return render_to_response('usuarios/login.html',
-                              {'login_failed':login_failed},
-                              context_instance=RequestContext(request))
+    return HttpResponseRedirect('/')

@@ -1,0 +1,8 @@
+{% extends "usuarios/index.html" %}
+{% block titulo %}Bienvenido{% endblock %}
+{% block contenido %}
+<link href="{{STATIC_URL}}css/miestilo.css" rel="stylesheet">
+    
+	<h3>Bienvenido {{usuario.username|upper}}, 
+		la última vez que ingreso al sistema fue el {{usuario.last_login}}.</h4>
+{% endblock %}

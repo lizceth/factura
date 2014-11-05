@@ -7,7 +7,7 @@ from django.contrib import admin
 
 
 urlpatterns = patterns('',
-    url(r'^$', TemplateView.as_view(template_name='base.html')),
+    url(r'^$', TemplateView.as_view(template_name='usuarios/ingresar.html')),
 
     # Examples:
     # url(r'^$', 'Factura.views.home', name='home'),
@@ -20,6 +20,10 @@ urlpatterns = patterns('',
 
     url(r'^admin/', include(admin.site.urls)),
     url(r'^grappelli/', include('grappelli.urls')), # grappelli URLS
+    #url(r'^/$', 'usuarios.views.login_view'),
+    url(r'^ingresar/$','usuarios.views.ingresar'),
+    url(r'^privado/$','usuarios.views.privado'),
+    url(r'^cerrar/$','usuarios.views.cerrar'),
 )
 
 # Uncomment the next line to serve media files in dev.
